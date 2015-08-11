@@ -22,12 +22,13 @@ Enemy.prototype.update = function(dt) {
     this.x = this.x + this.movement * dt;
     if (this.x >= 505) {
         this.reset();
-    };
-    if (this.collide()) {
-        //-------------------------------------------CAN ADD MORE HERE---------------------------------------------
     }
+//  if (this.collide()) {
+//      Nothing for now. Maybe something in the future
+//  }
 }
 
+// Collision detection for enemies
 Enemy.prototype.collide = function() {
     if (this.y === player.y && Math.abs(this.x - player.x * 101) <= 50) {
         return true;
@@ -40,6 +41,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y * 83 + 50);
 }
 
+// Returns an enemy to the starting position
 Enemy.prototype.reset = function() {
     this.movement = Math.floor(Math.random() * this.baseSpeed * 50 + this.baseSpeed * 50);
     this.y = Math.floor(Math.random() * 3);
@@ -58,22 +60,31 @@ var Player = function () {
     this.score = 0;
 }
 
+// Update method detects collisions with ememies
 Player.prototype.update = function () {
     for (var enemy in allEnemies) {
-        if (allEnemies[enemy].y === this.y && Math.abs(allEnemies[enemy].x - this.x * 101) <=50) {
+        if (allEnemies[enemy].collide()) {
             this.score = Math.max(0, this.score - 3);
             this.reset();
         }
     }
 }
 
+// Draws player on screen
 Player.prototype.render = function() {
     if (charSelected && difficultySelected) {
         ctx.font = '20px Verdana';
         ctx.fillText('Score: ' + this.score, 0, 575);
         ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 + 50);
     }
-    else if (!charSelected) {
+    else {
+        this.displaySelection();
+    }
+}
+
+// Renders the options for character avatar and difficulty setting.
+Player.prototype.displaySelection = function() {
+    if (!charSelected) {
         ctx.font = '30px Verdana';
         ctx.fillText('Please select a character', 50, 175);
         ctx.font = '20px Verdana';
@@ -97,6 +108,7 @@ Player.prototype.render = function() {
     }
 }
 
+// Reads in player input and behaves accordingly (moving player around screen or selecting option)
 Player.prototype.handleInput = function(input) {
     if (input === 'left') {
         this.x = Math.max(this.x - 1, 0);
@@ -122,6 +134,7 @@ Player.prototype.handleInput = function(input) {
     }
 }
 
+// Increases the players score depending on Gems collected upon reaching the river
 Player.prototype.scorePoint = function () {
     bonusPoint = true;
     for (var gem in allGems) {
@@ -134,6 +147,7 @@ Player.prototype.scorePoint = function () {
     this.reset();
 }
 
+// Returns the player to home position and respawns gems
 Player.prototype.reset = function() {
     this.x = 2;
     this.y = 4;
@@ -142,6 +156,7 @@ Player.prototype.reset = function() {
     });
 }
 
+// Spawns the enemies on the map depending on the difficulty
 var spawnEnemies = function () {
     allEnemies.push(new Enemy());
     allEnemies.push(new Enemy());
@@ -154,12 +169,14 @@ var spawnEnemies = function () {
     }
 }
 
+// Creates the Gems for the first time
 var spawnGems = function () {
     allGems.push(new GemBlue());
     allGems.push(new GemGreen());
     allGems.push(new GemOrange());
 }
 
+// Gem items for added fun to the game
 var Gem = function (img) {
     this.x = Math.floor(Math.random() * 5);
     this.y = Math.floor(Math.random() * 3);
@@ -167,18 +184,21 @@ var Gem = function (img) {
     this.sprite = img;
 }
 
+// Draws the gems on the map
 Gem.prototype.render = function() {
     if (this.visible) {
         ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 + 50);
     }
 }
 
+// Hides the gem if the player comes in contact with it
 Gem.prototype.update = function() {
     if (this.collide()) {
         this.visible = false;
     }
 }
 
+// Collision detection for the gem
 Gem.prototype.collide = function() {
     if (this.y === player.y && this.x === player.x) {
         return true;
@@ -186,12 +206,14 @@ Gem.prototype.collide = function() {
     return false;
 }
 
+// Respawns the gem to a random spot behind enemy lines
 Gem.prototype.reset = function() {
     this.x = Math.floor(Math.random() * 5);
     this.y = Math.floor(Math.random() * 3);
     this.visible = true;
 }
 
+// Subclasses for the Blue, Green and Orange gems (created as subclasses in case of future edits to Gem options)
 var GemBlue = function() {
     Gem.call(this, 'images/Gem Blue.png');
 }
