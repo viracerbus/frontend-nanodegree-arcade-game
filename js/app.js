@@ -1,5 +1,4 @@
 // Enemies our player must avoid
-
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -23,9 +22,9 @@ Enemy.prototype.update = function(dt) {
     if (this.x >= 505) {
         this.reset();
     }
-//  if (this.collide()) {
-//      Nothing for now. Maybe something in the future
-//  }
+    //  if (this.collide()) {
+    //      Nothing for now. Maybe something in the future
+    //  }
 };
 
 // Collision detection for enemies
@@ -52,7 +51,7 @@ Enemy.prototype.reset = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-var Player = function () {
+var Player = function() {
     this.x = 2;
     this.y = 4;
     this.listOfChar = ['images/char-horn-girl.png', 'images/char-cat-girl.png', 'images/char-boy.png', 'images/char-pink-girl.png', 'images/char-princess-girl.png'];
@@ -61,7 +60,7 @@ var Player = function () {
 };
 
 // Update method detects collisions with ememies
-Player.prototype.update = function () {
+Player.prototype.update = function() {
     for (var enemy in allEnemies) {
         if (allEnemies[enemy].collide()) {
             this.score = Math.max(0, this.score - 3);
@@ -76,8 +75,7 @@ Player.prototype.render = function() {
         ctx.font = '20px Verdana';
         ctx.fillText('Score: ' + this.score, 0, 575);
         ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 + 50);
-    }
-    else {
+    } else {
         this.displaySelection();
     }
 };
@@ -94,8 +92,7 @@ Player.prototype.displaySelection = function() {
         for (var option = 0; option < length; option++) {
             ctx.drawImage(Resources.get(this.listOfChar[option]), option * 101, 382);
         }
-    }
-    else {
+    } else {
         ctx.drawImage(Resources.get(this.sprite), 202, 382);
         ctx.font = '30px Verdana';
         ctx.fillText('Please select a difficulty', 50, 175);
@@ -136,7 +133,7 @@ Player.prototype.handleInput = function(input) {
 };
 
 // Increases the players score depending on Gems collected upon reaching the river
-Player.prototype.scorePoint = function () {
+Player.prototype.scorePoint = function() {
     var bonusPoint = true;
     allGems.forEach(function(gem) {
         bonusPoint = (bonusPoint && !gem.visible);
@@ -144,7 +141,7 @@ Player.prototype.scorePoint = function () {
     if (bonusPoint === true) {
         this.score += 2;
     }
-    this.score ++;
+    this.score++;
     this.reset();
 };
 
@@ -158,22 +155,22 @@ Player.prototype.reset = function() {
 };
 
 // Spawns the enemies on the map depending on the difficulty
-var spawnEnemies = function () {
-    limit = Math.min(5, difficulty + 2);
-    for (var i = 0; i < limit; i ++) {
+var spawnEnemies = function() {
+    var limit = Math.min(5, difficulty + 2);
+    for (var i = 0; i < limit; i++) {
         allEnemies.push(new Enemy());
     }
 };
 
 // Creates the Gems for the first time
-var spawnGems = function () {
+var spawnGems = function() {
     allGems.push(new GemBlue());
     allGems.push(new GemGreen());
     allGems.push(new GemOrange());
 };
 
 // Gem items for added fun to the game
-var Gem = function (img) {
+var Gem = function(img) {
     this.x = Math.floor(Math.random() * 5);
     this.y = Math.floor(Math.random() * 3);
     this.visible = true;
@@ -185,7 +182,7 @@ Gem.prototype.render = function() {
     if (this.visible) {
         ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 + 50);
     }
-}
+};
 
 // Hides the gem if the player comes in contact with it
 Gem.prototype.update = function() {
@@ -214,16 +211,19 @@ var GemBlue = function() {
     Gem.call(this, 'images/Gem Blue.png');
 };
 GemBlue.prototype = Object.create(Gem.prototype);
+GemBlue.prototype.constructor = GemBlue;
 
 var GemGreen = function() {
     Gem.call(this, 'images/Gem Green.png');
 };
 GemGreen.prototype = Object.create(Gem.prototype);
+GemGreen.prototype.constructor = GemGreen;
 
 var GemOrange = function() {
     Gem.call(this, 'images/Gem Orange.png');
 };
 GemOrange.prototype = Object.create(Gem.prototype);
+GemOrange.prototype.constructor = GemOrange;
 
 
 // Now instantiate your objects.
@@ -251,4 +251,3 @@ document.addEventListener('keyup', function(e) {
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
-

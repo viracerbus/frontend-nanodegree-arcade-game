@@ -57,7 +57,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    };
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -154,7 +154,7 @@ var Engine = (function(global) {
         allGems.forEach(function(gem) {
             gem.render();
         });
-        
+
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
